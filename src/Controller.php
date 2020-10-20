@@ -634,7 +634,13 @@ class Controller {
             WsLog::l( 'No deployment add-ons are enabled, skipping deployment.' );
         } else {
             WsLog::l( 'Starting deployment' );
-            do_action( 'wp2static_deploy', ProcessedSite::getPath(), Addons::getDeployer() );
+            try {
+              do_action( 'wp2static_deploy', ProcessedSite::getPath(), Addons::getDeployer() );
+            } catch (Exception $e) {
+              WsLog::l(
+                $e->getMessage()
+              );
+            }
         }
         WsLog::l( 'Starting post-deployment actions' );
         do_action( 'wp2static_post_deploy_trigger', Addons::getDeployer() );
